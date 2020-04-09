@@ -3,9 +3,7 @@
 
 % ~/bin/sicstus -l main.pl
 
-%-------------------------------------------------------------------
-% Programacao em logica estendida
-% Representacao de conhecimento imperfeito
+:- [conf].
 
 %-------------------------------------------------------------------
 % SICStus PROLOG: Declaracoes iniciais
@@ -47,38 +45,6 @@ clear :- write('\33\[2J').
             Descricao, Custo, Preco, Local, Data)),
     nao(excecao(contrato(IdC, IdAd, IdAda, TipodeContrato, TipodeProcedimento,
             Descricao, Custo, Preco, Local, Data))).
-
-%-------------------------------------------------------------------
-% Extensões de Predicados
-
-% Extensão do predicado data valida: Data -> {V,F}
-data(Dia, Mes, Ano) :- anoV(Ano), mesV(Mes), diaV(Dia, Mes).
-
-
-% Extensão do predicado anoV: Ano -> {V,F}
-anoV(Ano) :- integer(Ano), Ano > 1900 , Ano =< 2021.
-
-
-% Extensão do predicado mesV: Mes -> {V,F}
-mesV(Mes) :- integer(Mes), Mes =< 12.
-
-
-% Extensão do predicado diaV: Dia, Mes, Ano -> {V,F}
-% Meses com 31 dias
-diaV(Dia, Mes) :- pertence(Mes, [1, 3, 5, 7, 8, 10, 12]),
-                  integer(Dia),
-                  Dia =< 31.
-% Meses com 30 ou menos dias, no caso de Fevereiro
-diaV(Dia, Mes) :- pertence(Mes, [4, 6, 9, 11]),
-                  integer(Dia),
-                  Dia =< 30.
-% Fevereiro nunca tem mais do que 29 dias
-diaV(Dia, 02) :- Dia =< 29.
-
-
-% Extensão do predicado tipoProcedimento: TipoProcedimento -> {V,F}
-tipoProcedimento(X) :- pertence(X, ['Ajuste Direto', 'Consulta Previa', 'Concurso Publico']).
-
 
 %-------------------------------------------------------------------
 
@@ -243,7 +209,7 @@ c3Anos(AInser, [ (Ano, V)|T ], Acc, R) :-
     ((AInser =:= Ano; AInser =:= Ano+1; AInser =:= Ano+2) -> H is (V+Acc) ; H is Acc),
     c3Anos(AInser, T, H, R).
 
-% evolucao(contrato(100, 1, 11, 'Aquisicao de servicos', 'Consulta Previa', 'Assessoria juridica', 3000, 100, 'Alto de Basto', data(12, 05, 2020))).
+% evolucao(contrato(100, 10, 11, 'Aquisicao de servicos', 'Consulta Previa', 'Assessoria juridica', 3000, 1000, 'Alto de Basto', data(12, 05, 2010))).
 
 %-------------------------------------------------------------------
 % Queries
@@ -260,7 +226,7 @@ excecao(contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, data(DIns, MIns, AIN
     contrato(IdC, IdAd, ent1, TC, TP, DESC, Va, PR, L, data(DIns, MIns, ano1)).
 
 
-% demo(contrato(9, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 1000, 50, 'Braga', data(03, 12, 2010)), R).
+% demo(contrato(301, 9, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 1000, 50, 'Braga', data(03, 12, 2010)), R).
 
 
 % Query 2 ----------------------------------------------------------
@@ -272,7 +238,7 @@ excecao(contrato(302, 1, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servic
 excecao(contrato(302, 1, 7, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos Eletricos', 
         4000, 100, 'Alto de Basto', data(06, 08, 2012))).
 
-% demo(contrato(1, 7, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos Eletricos', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
+% demo(contrato(302, 1, 7, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos Eletricos', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
 
 
 % Query 3 ----------------------------------------------------------
@@ -288,7 +254,7 @@ excecao(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao
 excecao(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
         80000, 500, 'Braga', data(07, 02, 2019))).
 
-% demo(contrato(8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 80000, 500, 'Braga', data(09, 02, 2019)), R).
+% demo(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 80000, 500, 'Braga', data(09, 02, 2019)), R).
 
 % Query 4 ----------------------------------------------------------
 
@@ -303,7 +269,7 @@ proximo(X, Linf, Lsup) :-
     Linf is X * 0.90,
     Lsup is X * 1.10.
 
-% demo(contrato(7, 3, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de atendimento', 5000, 365, 'Vila Nova de Famalicao', data(13, 04, 2018)), R).
+% demo(contrato(304, 7, 3, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de atendimento', 5000, 365, 'Vila Nova de Famalicao', data(13, 04, 2018)), R).
 
 % Query 5 ----------------------------------------------------------
 
@@ -323,6 +289,48 @@ nulo(tp5).
 
 % demo(contrato(305, 6, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 130000, 500, 'Porto', data(30, 01, 1960)),R).
 % evolucao(contrato(305, 6, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 130000, 500, 'Porto', data(30, 01, 1960))).
+
+% Query 6 ----------------------------------------------------------
+
+% Desconhece-se a morada da entidade adjudicante 'XCorp'
+adjudicante(306, 'XCorp', 3000, m6).
+excecao(adjudicante(Id, N, Nif, Morada)) :-
+    adjudicante(Id, N, Nif, m6).
+
+% demo(adjudicante(306, 'XCorp', 3000, 'Famalicao'), R).
+
+% Query 7 ----------------------------------------------------------
+
+% Sabe-se que a entidade adjudicataria 'NOS' tem como Morada Portugal, Lisboa. Contudo desconhece-se o NIF desta
+% sabendo apenas que não é 10101
+-adjudicataria(307, 'NOS', 10101, 'Portugal, Lisboa').
+
+adjudicataria(307, 'NOS', n7, 'Portugal, Lisboa').
+
+excecao(adjudicataria(Id, Nome, NIF, Morada)) :-
+    adjudicataria(Id, Nome, n7, Morada).
+
+% demo(adjudicataria(307, 'NOS', 10101, 'Portugal, Lisboa'), R).
+
+% Query 8 ----------------------------------------------------------
+
+% O contrato entre a entidade adjudicante 'Universidade do Minho' e a entidade adjudicataria 'Transportes Urbanos 
+% de Braga para propocionar viagens aos estudantes dentro da cidade de Braga. Sabe-se que o contrato foi celebrado
+% no dia '06-2-2004' e que o prazo deste foi maior que 10 anos, visto que em 2014 ainda se encontrava em exercicio 
+% Contudo, o valor exato é desconhecido. O valor do contrato encontra-se proximo dos 200 000 euros.
+-contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 
+Va, Prazo, 'Braga', data(06,02,2004)) :-
+    Prazo > 0, Prazo =< (10*365).
+
+contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes',
+Va, p8, 'Braga', data(06,02,2004)) :- 
+    proximo(200000, Vinf, Vsup), 
+    Va >= Vinf, Va =< Vsup.
+
+excecao(contrato(IdC, IdA, IdAda, TC, TP, Desc, V, Pr, Loc, D)) :-
+    contrato(IdC, IdA, IdAda, TC, TP, Desc, V, p8, Loc, D).
+
+% demo(contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 200000, 20, 'Braga', data(06,02,2004)), R).
 
 %-------------------------------------------------------------------
 
@@ -365,24 +373,4 @@ demo( Questao,falso ) :-
 demo( Questao,desconhecido ) :-
     nao( Questao ),
     nao( -Questao ).
-
-%-------------------------------------------------------------------
-% Extensao do meta-predicado nao: Questao -> {V,F}
-
-nao( Questao ) :-
-    Questao, !, fail.
-nao( Questao ).
-
-%-------------------------------------------------------------------
-% Funções auxiliares
-
-solucoes( X,Y,Z ) :-
-    findall( X,Y,Z ).
-
-comprimento( S,N ) :-
-    length( S,N ).
-
-pertence( X,[X|L] ).
-pertence( X,[Y|L] ) :-
-    X \= Y,
-    pertence( X,L ).
+    
