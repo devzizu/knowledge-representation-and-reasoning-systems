@@ -5,6 +5,12 @@
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
 
+% Faz reload ao ficheiro 'main.pl'
+reload :- consult('main.pl').
+
+% Faz clear ao terminal
+clear :- write('\33\[2J').
+
 % Extensão do predicado data valida: Data -> {V,F}
 data(Dia, Mes, Ano) :- anoV(Ano), mesV(Mes), diaV(Dia, Mes).
 

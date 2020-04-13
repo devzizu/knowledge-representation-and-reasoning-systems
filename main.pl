@@ -3,7 +3,7 @@
 
 % ~/bin/sicstus -l main.pl
 
-:- [conf].
+:- [funcAux].
 
 %-------------------------------------------------------------------
 % SICStus PROLOG: Declaracoes iniciais
@@ -11,12 +11,6 @@
 :- set_prolog_flag( discontiguous_warnings,off ).
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
-
-% Faz reload ao ficheiro 'main.pl'
-reload :- consult('main.pl').
-
-% Faz clear ao terminal
-clear :- write('\33\[2J').
 
 %-------------------------------------------------------------------
 % SICStus PROLOG: definicoes iniciais
@@ -28,8 +22,8 @@ clear :- write('\33\[2J').
 :- dynamic adjudicataria/4. % #IdAda, Nome, NIF, Morada
 
 :- dynamic contrato/10.     % #IdC, #IdAd, #IdAda, Tipo de Contrato, 
-                            % Tipo de Procedimento, Descriçao,
-                            % Custo, Preço, Local, Data
+                            % Tipo de Procedimento, Descricao,
+                            % Custo, Preco, Local, Data
 
 -adjudicante(IdAd, Nome, NIF, Morada) :-
     nao(adjudicante(IdAd, Nome, NIF, Morada)),
@@ -49,46 +43,45 @@ clear :- write('\33\[2J').
 %-------------------------------------------------------------------
 
 % Extensão do Predicado adjudicante: #IdAd, Nome, NIF, Morada -> {V,F,D}
-adjudicante(1, 'Municipio de Alto de Basto', 705330336, 'Portugal, Braga, Alto de Basto').
-adjudicante(2, 'Municipio de Vila Nova de Famalicao', 01, 'Portugal, Braga, Vila Nova de Famalicao').
-adjudicante(3, 'Municipio de Barcelos', 02, 'Portugal, Braga, Barcelos').
-adjudicante(4, 'Municipio de Vila Nova de Gaia', 03, 'Portugal, Porto, Vila Nova de Gaia').
-adjudicante(5, 'Universidade do Minho', 04, 'Portugal, Braga, Braga').
-adjudicante(6, 'Universidade do Porto', 05, 'Portugal, Porto, Porto').
-adjudicante(7, 'Associacao Humanitaria de Bombeiros Voluntarios de Vila Nova de Famalicao', 06, 'Portugal, Braga, Vila Nova de Famalicao').
-adjudicante(8, 'Universidade Nova de Lisboa', 07, 'Portugal, Lisboa, Lisboa').
-adjudicante(9, 'Municipio de Braga', 08, 'Portugal, Braga, Braga').
-adjudicante(10, 'Estabelecimento Prisional Regional de Braga', 09, 'Portugal, Braga, Braga').
+adjudicante(1, 'Estado Portugues', 1, 'Portugal').
+adjudicante(2, 'Municipio de Guimaraes', 505948605, 'Portugal, Braga, Guimaraes').
+adjudicante(3, 'Municipio de Alto de Basto', 705330336, 'Portugal, Braga, Alto de Basto').
+adjudicante(4, 'Municipio de Vila Nova de Famalicao', 506663264, 'Portugal, Braga, Vila Nova de Famalicao').
+adjudicante(5, 'Municipio de Barcelos', 505584760, 'Portugal, Braga, Barcelos').
+adjudicante(6, 'Municipio de Vila Nova de Gaia', 505335018, 'Portugal, Porto, Vila Nova de Gaia').
+adjudicante(7, 'Universidade do Minho', 502011378, 'Portugal, Braga, Braga').
+adjudicante(8, 'Faculdade de Engenharia da Universidade do Porto', 600027716, 'Portugal, Porto, Porto').
+adjudicante(9, 'Universidade Nova de Lisboa', 501559094, 'Portugal, Lisboa, Lisboa').
+adjudicante(10, 'Municipio de Braga', 506901173, 'Portugal, Braga, Braga').
+adjudicante(11, 'AAUM-Associacao Academica da Universidade do Minho', 500741093, 'Portugal, Braga, Braga').
 
 % Extensão do Predicado adjudicataria: #IdAda, Nome, NIF, Morada -> {V,F,D}
-adjudicataria(1, 'Sa Limpa', 101, 'Portugal').
-adjudicataria(2, 'Biofluidos - Climatizacao', 102, 'Portugal').
-adjudicataria(3, 'Support Evolution', 103, 'Portugal').
-adjudicataria(4, 'SecurNet', 104, 'Portugal').
-adjudicataria(5, 'Safira Facility Services', 105, 'Inglaterra').
-adjudicataria(6, 'Transportes Urbanos de Braga', 106, 'Portugal').
-adjudicataria(7, 'Serviurge', 107, 'Portugal').
-adjudicataria(8, 'Uninefro', 108, 'Franca').
-adjudicataria(9, 'Universidade do Minho', 4, 'Portugal').
-adjudicataria(10, 'Reload - Consultoria Informatica', 110, 'Espanha').
-adjudicataria(11, 'XXX - Associados - Sociedade de Advogados, SP, RL.', 702675112, 'Portugal').
+adjudicataria(1, 'SA LIMPA - SOCIEDADE DE LIMPEZAS, LDA.', 504458086, 'Portugal').
+adjudicataria(2, 'Vodafone', 506862747, 'Portugal').
+adjudicataria(3, 'Universidade do Minho', 502011378, 'Portugal').
+adjudicataria(4, 'TUB - Empresa Transportes Urbanos de Braga', 504807684, 'Portugal').
+adjudicataria(5, 'Diversey Portugal-Sistemas de Higiene e Limpeza Unipessoal, Lda', 500086753, 'Portugal').
+adjudicataria(6, 'Arada - Engenharia e Gestao de Empreitadas, Lda.', 502189150, 'Portugal').
+adjudicataria(7, 'ARRIVA Portugal - Transportes Lda.', 504426974, 'Portugal').
+adjudicataria(8, 'MEO - Servicos de Comunicacao e multimedia, S. A.', 203755030, 'Portugal').
+adjudicataria(9, 'XXX - Associados - Sociedade de Advogados, SP, RL.', 702675112, 'Portugal').
 
 % Extensão do Predicado contrato: #IdC, #IdAd, #IdAda, Tipo de Contrato, 
                                 % Tipo de Procedimento, Descriçao,  
                                 % Custo, Preço, Local, Data 
                                 % -> {V,F,D}
-contrato(1, 1, 11, 'Aquisicao de servicos', 'Consulta Previa', 'Assessoria juridica', 
-        70000, 547, 'Alto de Basto', data(11, 02, 2020)).
-contrato(2, 1, 11, 'Aquisicao de servicos', 'Consulta Previa', 'Assessoria juridica', 
-        1000, 30, 'Alto de Basto', data(12, 05, 2019)).
-contrato(3, 4, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Limpeza de instalacoes', 
-        15000, 380, 'Gualtar', data(21, 09, 2015)).
-contrato(4, 10, 10, 'Aquisicao de bens', 'Ajuste Direto', 'aquisicao de bens informaticos', 
-        4500, 25, 'Braga', data(7, 03, 2016)).
-contrato(5, 2, 8, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos terapeuticos', 
-        10000, 120, 'Vila Nova de Famalicao', data(23, 11, 2003)).
-contrato(6, 9, 6, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 
-        100000, 400, 'Braga', data(03, 12, 2010)).
+contrato(1, 2, 3, 'Aquisicao de servicos', 'Ajuste Direto', 'Aquisicao de servicos para a elaboracao do estudo urbano sobre a zona norte da Cidade', 
+        5000, 112, 'Guimaraes', data(19, 11, 2019)).
+contrato(2, 1, 8, 'Aquisicao de servicos', 'Concurso Publico', 'Aquisicao de servicos de telecomunicacoes', 
+        20000, 100, 'Lisboa', data(12, 05, 2019)).
+contrato(3, 7, 1, 'Aquisicao de bens moveis', 'Consulta Previa', 'Aquisicao de materiais de Limpeza', 
+        74000, 400, 'Gualtar', data(01, 08, 2019)).
+contrato(4, 3, 6, 'Empreitadas de obras publicas', 'Concurso Publico', 'Obras em salas de aulas do campus de Gualtar', 
+        5000000, 1000, 'Alto de Basto', data(7, 03, 2016)).
+contrato(5, 11, 4, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 
+        50000, 120, 'Braga', data(23, 11, 2003)).
+contrato(6, 7, 9, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos de assessoria', 
+        3800, 25, 'Braga', data(03, 12, 2010)).
 
 
 %-------------------------------------------------------------------
@@ -110,7 +103,7 @@ contrato(6, 9, 6, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de tran
         mesmaEnt((Nome, Morada), L)
     ).
 
-% Verfica se existe uma entidade adjudicataria com o mesmo NIF e,
+% Verifica se existe uma entidade adjudicataria com o mesmo NIF e,
 % caso exista, valida se tem o mesmo nome e morada;
 mesmaEnt(N, []).
 mesmaEnt(N, [N]).
@@ -151,7 +144,7 @@ isNif(X) :-
 
 % Invariantes para o Contrato --------------------------------------
 
-% Verifica se o Id é único nos Contratos;
+% Verifica se o IdC é único nos Contratos;
 % Verfica se o Tipo de Procedimento é válido;
 % Verifica se a Data é válida;
 % Verifica se o Valor do contrato é válido, ou seja, não negativo;
@@ -176,20 +169,73 @@ isNif(X) :-
 tiraUltimo([X], Acc, R) :- R = Acc.
 tiraUltimo([H|T], Acc, R) :- tiraUltimo(T, S, R), S = [H|Acc].
 
-% Se o contrato tiver como Tipo de Procedimento 'Ajuste Direto', então: 
-% -> Tem de ter valor igual ou inferior a 5000 euros;
-% -> O Tipo de Contrato só pode ser 'Aquisicao de servicos', 'Contrato de Aquisicao' ou 'Locação de Bens Moveis';
+
+% Contratos por Ajuste Direto --------------------------------------
+
+% Se o contrato tiver como Tipo de Procedimento 'Ajuste Direto'
+% -> Se o Tipo de Contrato for 'Aquisicao de servicos', 'Contrato de Aquisicao' ou 'Locação de Bens Moveis', então
+% Tem de ter valor igual ou inferior a 5 000 euros;
+% -> Senão o valor tem de ser igual ou inferior a 10 000 euros ('Empreitadas de obras publicas');
 % -> O Prazo de vigência tem de ser até 1 ano (assumimos o valor de 365 dias) a contar da decisão de adjudicação;
+% NOTA: pode haver outro tipos de contrato
 +contrato(IdC, IdAd, IdAda, TC, 'Ajuste Direto', DESC, Va, PR, L, D) :: 
     (
-        Va =< 5000,
-        pertence(TC, ['Aquisicao de servicos', 'Contrato de Aquisicao', 'Locacao de Bens Moveis']),
-        PR =< 365
+        PR =< 365,
+        (TC == 'Empreitadas de obras publicas') -> Va =< 10000 ;
+        (pertence(TC, ['Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis'])) -> Va =< 5000
     ).
 
-% evolucao(contrato(200, 5, 2, 'Aquisicao de servicos', 'Ajuste Direto', 'Assessoria juridica', 6000, 300, 'Alto de Basto', data(12, 05, 2009))).
+% evolucao(contrato(200, 5, 2, 'Empreitadas de obras publicas', 'Ajuste Direto', 'Assessoria juridica', 7000, 300, 'Alto de Basto', data(12, 05, 2009))).
 
-% Regra dos 3 Anos válida para todos os contratos:
+
+% Contratos por Consulta Previa ------------------------------------
+
+% Se o contrato tiver como Tipo de Procedimento 'Consulta Previa' e
+% o Tipo de Contrato ser 'Aquisicao de servicos', 'Contrato de Aquisicao' ou 'Locação de Bens Moveis', então: 
+% -> Tem de ter valor inferior a 75 000 euros;
+% Se o contrato tiver como Tipo de Procedimento 'Consulta Previa' e
+% o Tipo de Contrato ser 'Empreitadas de obras publicas', então: 
+% -> Tem de ter valor inferior a 150 000 euros;
+% Se o contrato tiver como Tipo de Procedimento 'Consulta Previa' e
+% o Tipo de Contrato ser de outro tipo (relativamente aos dois invariantes de cima), então: 
+% -> Tem de ter valor inferior a 100 000 euros;
++contrato(IdC, IdAd, IdAda, TC, 'Consulta Previa', DESC, Va, PR, L, D) :: 
+    (
+        (TC == 'Empreitadas de obras publicas') -> Va < 150000 ;
+        (pertence(TC, ['Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis'])) -> Va < 75000 ; Va < 100000
+    ).
+
+% evolucao(contrato(200, 5, 2, 'outro tipo', 'Consulta Previa', 'Assessoria juridica', 86000, 300, 'Alto de Basto', data(12, 05, 2009))).
+
+
+% Contratos por Concurso Publico -----------------------------------
+
+% Se o contrato tiver como Tipo de Procedimento 'Concurso Publico' e
+% o Tipo de Contrato ser 'Empreitadas de obras publicas', então: 
+% -> Tem de ter valor inferior a 5 350 000 euros;
+% Se o contrato tiver como Tipo de Procedimento 'Concurso Publico',
+% o Tipo de Contrato ser 'Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis' e
+% a entidade adjudicante ser o Estado (Id == 1) 
+% -> Tem de ter valor inferior a 139 000 euros;
+% Se o contrato tiver como Tipo de Procedimento 'Concurso Publico',
+% o Tipo de Contrato ser 'Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis' e
+% a entidade adjudicante não ser o Estado (Id \== 1) 
+% -> Tem de ter valor inferior a 214 000 euros;
++contrato(IdC, IdAd, IdAda, TC, 'Concurso Publico', DESC, Va, PR, L, D) :: 
+    (
+        (TC == 'Empreitadas de obras publicas') -> Va < 5350000 ;
+        (pertence(TC, ['Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis']) , IdAd == 1)
+            -> Va < 139000 ; 
+        (pertence(TC, ['Aquisicao de servicos', 'Aquisicao de Bens Moveis', 'Locacao de Bens Moveis']) , IdAd \== 1) 
+            -> Va < 214000
+    ).
+
+
+% evolucao(contrato(200, 1, 2, 'Aquisicao de servicos', 'Concurso Publico', 'Assessoria juridica', 100000, 300, 'Alto de Basto', data(12, 05, 2009))).
+
+
+% Regra dos 3 Anos válida para todos os contratos ------------------
+
 % Uma entidade adjudicante não pode convidar a mesma empresa para um contrato com prestações de serviço (Tipo de Contrato)
 % do mesmo tipo às de contratos anteriores no ano económico em curso e nos dois anteriores, sempre que:
 % -> O valor das somas dos contrato celebrados seja igual ou superior a 75000;
@@ -209,58 +255,81 @@ c3Anos(AInser, [ (Ano, V)|T ], Acc, R) :-
     ((AInser =:= Ano; AInser =:= Ano+1; AInser =:= Ano+2) -> H is (V+Acc) ; H is Acc),
     c3Anos(AInser, T, H, R).
 
-% evolucao(contrato(100, 10, 11, 'Aquisicao de servicos', 'Consulta Previa', 'Assessoria juridica', 3000, 1000, 'Alto de Basto', data(12, 05, 2010))).
+% evolucao(contrato(102, 7, 1, 'Aquisicao de bens moveis', 'Consulta Previa', 'Assessoria juridica', 3000, 1000, 'Alto de Basto', data(12, 05, 2020))).
+
+
+
+% Invariantes para Involução ---------------------------------------
+
+% Só é possível remover um adjudicante caso ele não tenha nenhum contrato
+-adjudicante(Id, Nome, NIF, Morada) :: 
+    (
+        solucoes(IdC, contrato(IdC, Id, IdAda, TC, TP, DESC, Va, PR, L, D), Lista),
+        comprimento(Lista, N),
+        N == 0
+    ).
+
+% Só é possível remover um adjucataria caso ele não tenha nenhum contrato
+-adjucataria(Id, Nome, NIF, Morada) :: 
+    (
+        solucoes(IdC, contrato(IdC, IdAd, Id, TC, TP, DESC, Va, PR, L, D), Lista),
+        comprimento(Lista, N),
+        N == 0
+    ).
+
+
 
 %-------------------------------------------------------------------
-% Queries
+
+% Funcionalidades
 
 % Query 1 ----------------------------------------------------------
 
 %   O Municipio de Braga indicou que celebrou um contrato por Concurso Publico com uma entidade. Desconhece-se qual
-%   a entidade a qual foi celebrado o contrato. O contrato foi de Aquisicao de servicos informaticos no valor de 
+%   a entidade adjucataria que foi celebrado o contrato. O contrato foi de Aquisicao de servicos informaticos no valor de 
 %   1000 com um prazo de 50 dias.
 %   A data do contrato foi a 3 de Março, embora se desconheça o ano.
-contrato(301, 9, ent1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 
+contrato(301, 10, ent1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 
         1000, 50, 'Braga', data(03, 12, ano1)).
 excecao(contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, data(DIns, MIns, AINS))) :- 
     contrato(IdC, IdAd, ent1, TC, TP, DESC, Va, PR, L, data(DIns, MIns, ano1)).
 
 
-% demo(contrato(301, 9, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 1000, 50, 'Braga', data(03, 12, 2010)), R).
+% demo(contrato(301, 10, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 1000, 50, 'Braga', data(03, 12, 2010)), R).
 
 
 % Query 2 ----------------------------------------------------------
 
 %   A entidade adjucataria diz que celebrou um contrato com o Municipio de Alto de Basto por Concurso Publico. Contudo, a imprensa afirma que 
 %   foi por Ajuste Direto. A entidade adjudicante não confirma nem desmente a imprensa.
-excecao(contrato(302, 1, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Eletricos', 
+excecao(contrato(302, 3, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 
         4000, 100, 'Alto de Basto', data(06, 08, 2012))).
-excecao(contrato(302, 1, 7, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos Eletricos', 
+excecao(contrato(302, 3, 7, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos de transporte', 
         4000, 100, 'Alto de Basto', data(06, 08, 2012))).
 
-% demo(contrato(302, 1, 7, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos Eletricos', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
+% demo(contrato(302, 3, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
 
 
 % Query 3 ----------------------------------------------------------
 
 %   No contrato celebrado, desconhece-se se a entidade adjudicante é o Municipio de Barcelos ou o Municipio de Braga. A data do contrato
 %   ou é 05/2/2019 ou a 07/02/2019.
-excecao(contrato(303, 3, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
+excecao(contrato(303, 5, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
         80000, 500, 'Braga', data(05, 02, 2019))).
-excecao(contrato(303, 3, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
+excecao(contrato(303, 5, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
         80000, 500, 'Braga', data(07, 02, 2019))).
-excecao(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
+excecao(contrato(303, 10, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
         80000, 500, 'Braga', data(05, 02, 2019))).
-excecao(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
+excecao(contrato(303, 10, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 
         80000, 500, 'Braga', data(07, 02, 2019))).
 
-% demo(contrato(303, 8, 10, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 80000, 500, 'Braga', data(09, 02, 2019)), R).
+% demo(contrato(303, 5, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 80000, 500, 'Braga', data(05, 02, 2019)), R).
 
 % Query 4 ----------------------------------------------------------
 
-%   O contrato celebrado entre a adjudicante Associacao Humanitaria de Bombeiros Voluntarios de Vila Nova de Famalicao e a 
-%   adjudicataria Support Evolution, tem um valor proximo dos 5000, em Consulta Previa.
-excecao(contrato(304, 7, 3, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de atendimento', 
+%   O contrato celebrado entre a adjudicante Municipio de Vila Nova de Famalicao e a 
+%   adjudicataria Vodafone, tem um valor proximo dos 5000, em Consulta Previa.
+excecao(contrato(304, 4, 2, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de telecomonicacoes', 
     Valor, 365, 'Vila Nova de Famalicao', data(13, 04, 2018))) :- 
         proximo(5000, Linf, Lsup),
         Valor >= Linf, Valor =< Lsup.
@@ -269,17 +338,18 @@ proximo(X, Linf, Lsup) :-
     Linf is X * 0.90,
     Lsup is X * 1.10.
 
-% demo(contrato(304, 7, 3, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de atendimento', 5000, 365, 'Vila Nova de Famalicao', data(13, 04, 2018)), R).
+% demo(contrato(304, 4, 2, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de telecomonicacoes', 50000, 365, 'Vila Nova de Famalicao', data(13, 04, 2018)), R).
 
 % Query 5 ----------------------------------------------------------
 
-%   O papel do contrato estabelecido entre a empresa Safira Facility Services e a entidade adjudicante Universidade do Porto perdeu-se,
+%   O papel do contrato estabelecido entre a empresa 'Diversey Portugal-Sistemas de Higiene e Limpeza Unipessoal, Lda' 
+%   e a entidade adjudicante 'Faculdade de Engenharia da Universidade do Porto' perdeu-se,
 %   pelo que é impossível saber qual o tipo de procedimento adotado.
-contrato(305, 6, 5, 'Aquisicao de servicos', tp5, 'Servicos de Limpeza', 
-    130000, 500, 'Porto', data(30, 01, 1960)).
+contrato(id5, 8, 5, 'Aquisicao de servicos', tp5, 'Servicos de Limpeza', 
+    1000, 500, 'Porto', data(30, 01, 1960)).
 
-excecao(contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, data(DIns, MIns, AINS))) :- 
-    contrato(IdC,IdAd, IdAda, TC, tp5, DESC, Va, PR, L, data(DIns, MIns, AINS)).
+excecao(contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, D)) :- 
+    contrato(id5,IdAd, IdAda, TC, tp5, DESC, Va, PR, L, D).
 nulo(tp5).
 +contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, Local, data(DIns, MIns, AINS)) :: 
     (
@@ -287,8 +357,8 @@ nulo(tp5).
         comprimento(Lista, 0)
     ).
 
-% demo(contrato(305, 6, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 130000, 500, 'Porto', data(30, 01, 1960)),R).
-% evolucao(contrato(305, 6, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 130000, 500, 'Porto', data(30, 01, 1960))).
+% demo(contrato(305, 8, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 1000, 500, 'Porto', data(30, 01, 1960)),R).
+% evolucao(contrato(305, 8, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 1000, 500, 'Porto', data(30, 01, 1960))).
 
 % Query 6 ----------------------------------------------------------
 
@@ -304,25 +374,23 @@ excecao(adjudicante(Id, N, Nif, Morada)) :-
 % Sabe-se que a entidade adjudicataria 'NOS' tem como Morada Portugal, Lisboa. Contudo desconhece-se o NIF desta
 % sabendo apenas que não é 10101
 -adjudicataria(307, 'NOS', 10101, 'Portugal, Lisboa').
-
 adjudicataria(307, 'NOS', n7, 'Portugal, Lisboa').
-
 excecao(adjudicataria(Id, Nome, NIF, Morada)) :-
     adjudicataria(Id, Nome, n7, Morada).
 
-% demo(adjudicataria(307, 'NOS', 10101, 'Portugal, Lisboa'), R).
+% demo(adjudicataria(307, 'NOS', 101, 'Portugal, Lisboa'), R).
 
 % Query 8 ----------------------------------------------------------
 
-% O contrato entre a entidade adjudicante 'Universidade do Minho' e a entidade adjudicataria 'Transportes Urbanos 
-% de Braga para propocionar viagens aos estudantes dentro da cidade de Braga. Sabe-se que o contrato foi celebrado
+% O contrato entre a entidade adjudicante 'AAUM-Associacao Academica da Universidade do Minho' e a entidade adjudicataria 'Transportes Urbanos 
+% de Braga serviu para propocionar viagens aos estudantes dentro da cidade de Braga. Sabe-se que o contrato foi celebrado
 % no dia '06-2-2004' e que o prazo deste foi maior que 10 anos, visto que em 2014 ainda se encontrava em exercicio 
-% Contudo, o valor exato é desconhecido. O valor do contrato encontra-se proximo dos 200 000 euros.
--contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 
+% Contudo, o valor exato do prazo é desconhecido. O valor do contrato encontra-se proximo dos 200 000 euros.
+-contrato(308, 11, 4, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 
 Va, Prazo, 'Braga', data(06,02,2004)) :-
     Prazo > 0, Prazo =< (10*365).
 
-contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes',
+contrato(308, 11, 4, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes',
 Va, p8, 'Braga', data(06,02,2004)) :- 
     proximo(200000, Vinf, Vsup), 
     Va >= Vinf, Va =< Vsup.
@@ -330,7 +398,7 @@ Va, p8, 'Braga', data(06,02,2004)) :-
 excecao(contrato(IdC, IdA, IdAda, TC, TP, Desc, V, Pr, Loc, D)) :-
     contrato(IdC, IdA, IdAda, TC, TP, Desc, V, p8, Loc, D).
 
-% demo(contrato(308, 5, 6, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 200000, 20, 'Braga', data(06,02,2004)), R).
+% demo(contrato(308, 11, 4, 'Aquisicao de servicos', 'Consulta Previa', 'Prestacao de transportes para estudantes', 200, 20000, 'Braga', data(06,02,2004)), R).
 
 %-------------------------------------------------------------------
 
