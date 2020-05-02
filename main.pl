@@ -25,14 +25,17 @@
                             % Tipo de Procedimento, Descricao,
                             % Custo, Preco, Local, Data
 
+% Predicado que permite a representação de conhecimento imperfeito para o adjudicante
 -adjudicante(IdAd, Nome, NIF, Morada) :-
     nao(adjudicante(IdAd, Nome, NIF, Morada)),
     nao(excecao(adjudicante(IdAd, Nome, NIF, Morada))).
 
+% Predicado que permite a representação de conhecimento imperfeito para a adjudicataria
 -adjudicataria(IdAda, Nome, NIF, Morada) :- 
     nao(adjudicataria(IdAda, Nome, NIF, Morada)),
     nao(excecao(adjudicataria(IdAda, Nome, NIF, Morada))).
 
+% Predicado que permite a representação de conhecimento imperfeito para o contrato
 -contrato(IdC, IdAd, IdAda, TipodeContrato, TipodeProcedimento,
             Descricao, Custo, Preco, Local, Data) :-
     nao(contrato(IdC, IdAd, IdAda, TipodeContrato, TipodeProcedimento,
@@ -83,7 +86,6 @@ contrato(5, 11, 4, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de tra
 contrato(6, 7, 9, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos de assessoria', 
         3800, 25, 'Braga', data(03, 12, 2010)).
 
-
 %-------------------------------------------------------------------
 
 % Invariante para o Adjudicante ------------------------------------
@@ -94,6 +96,7 @@ contrato(6, 7, 9, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos de assesso
 % caso exista, valida se tem o mesmo nome e morada;
 +adjudicante(Id, Nome, NIF, Morada) :: 
     (
+        integer(Id),
         solucoes((I, Nif), adjudicante(I, N, Nif, M), Lista),
         isNif(NIF),
         parseIdNif(Lista, [], [], IList, NList),
@@ -119,7 +122,7 @@ isNif(X) :-
     X >= 0,
     X =< 999999999.
     
-% evolucao(adjudicante(100, 'Municipio de Alto de Basto', 103, 'Portugal, Braga, Alto de Basto')).
+% evolucao(adjudicante(10, 'Municipio de Alto de Basto', 103, 'Portugal, Braga, Alto de Basto')).
 
 
 % Invariante para a Adjudicataria ----------------------------------
@@ -130,6 +133,7 @@ isNif(X) :-
 % caso exista, valida se tem o mesmo nome e morada;
 +adjudicataria(Id, Nome, NIF, Morada) ::
     (
+        integer(Id),
         solucoes((I, Nif), adjudicataria(I, N, Nif, M), Lista),
         isNif(NIF),
         parseIdNif(Lista, [], [], IList, NList),
@@ -144,6 +148,7 @@ isNif(X) :-
 
 % Invariantes para o Contrato --------------------------------------
 
+% Verifica se os Id's são inteiros;
 % Verifica se o IdC é único nos Contratos;
 % Verfica se o Tipo de Procedimento é válido;
 % Verifica se a Data é válida;
@@ -152,6 +157,7 @@ isNif(X) :-
 % Verifica se as entidades dos contratos existem;
 +contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, Data) ::
     (
+        integer(IdC), integer(IdAd), integer(IdAda),
         solucoes(IdC, contrato(IdC, Id, IdA, Tc, Tp, Desc, V, Prazo, Local, D), Lista),
         tiraUltimo(Lista, [], R),
         nao(pertence(IdC, R)),
@@ -258,7 +264,6 @@ c3Anos(AInser, [ (Ano, V)|T ], Acc, R) :-
 % evolucao(contrato(102, 7, 1, 'Aquisicao de bens moveis', 'Consulta Previa', 'Assessoria juridica', 3000, 1000, 'Alto de Basto', data(12, 05, 2020))).
 
 
-
 % Invariantes para Involução ---------------------------------------
 
 % Só é possível remover um adjudicante caso ele não tenha nenhum contrato
@@ -269,21 +274,22 @@ c3Anos(AInser, [ (Ano, V)|T ], Acc, R) :-
         N == 0
     ).
 
-% Só é possível remover um adjucataria caso ele não tenha nenhum contrato
--adjucataria(Id, Nome, NIF, Morada) :: 
+% Só é possível remover um adjudicataria caso ele não tenha nenhum contrato
+-adjudicataria(Id, Nome, NIF, Morada) :: 
     (
         solucoes(IdC, contrato(IdC, IdAd, Id, TC, TP, DESC, Va, PR, L, D), Lista),
         comprimento(Lista, N),
         N == 0
     ).
 
-
+% involucao(adjudicataria(7, 'ARRIVA Portugal - Transportes Lda.', 504426974, 'Portugal')).
+% involucao(adjudicante(200000, 'Municipio de Guimaraes', 505948605, 'Portugal, Braga, Guimaraes')).
 
 %-------------------------------------------------------------------
 
 % Funcionalidades
 
-% Query 1 ----------------------------------------------------------
+% Funcionalidade 1 ----------------------------------------------------------
 
 %   O Municipio de Braga indicou que celebrou um contrato por Concurso Publico com uma entidade. Desconhece-se qual
 %   a entidade adjucataria que foi celebrado o contrato. O contrato foi de Aquisicao de servicos informaticos no valor de 
@@ -298,19 +304,19 @@ excecao(contrato(IdC, IdAd, IdAda, TC, TP, DESC, Va, PR, L, data(DIns, MIns, AIN
 % demo(contrato(301, 10, 1, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos Informaticos', 1000, 50, 'Braga', data(03, 12, 2010)), R).
 
 
-% Query 2 ----------------------------------------------------------
+% Funcionalidade 2 ----------------------------------------------------------
 
 %   A entidade adjucataria diz que celebrou um contrato com o Municipio de Alto de Basto por Concurso Publico. Contudo, a imprensa afirma que 
-%   foi por Ajuste Direto. A entidade adjudicante não confirma nem desmente a imprensa.
+%   foi por Ajuste Direto. A entidade adjudicante não confirma nem desmente nenhum dos valores.
 excecao(contrato(302, 3, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 
         4000, 100, 'Alto de Basto', data(06, 08, 2012))).
 excecao(contrato(302, 3, 7, 'Aquisicao de servicos', 'Ajuste Direto', 'Servicos de transporte', 
         4000, 100, 'Alto de Basto', data(06, 08, 2012))).
 
-% demo(contrato(302, 3, 7, 'Aquisicao de servicos', 'Concurso Publico', 'Servicos de transporte', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
+% demo(contrato(302, 3, 7, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de transporte', 4000, 100, 'Alto de Basto', data(06, 08, 2012)), R).
 
 
-% Query 3 ----------------------------------------------------------
+% Funcionalidade 3 ----------------------------------------------------------
 
 %   No contrato celebrado, desconhece-se se a entidade adjudicante é o Municipio de Barcelos ou o Municipio de Braga. A data do contrato
 %   ou é 05/2/2019 ou a 07/02/2019.
@@ -325,7 +331,7 @@ excecao(contrato(303, 10, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao
 
 % demo(contrato(303, 5, 9, 'Aquisicao de bens', 'Concurso Publico', 'Aquisicao de bens moveis', 80000, 500, 'Braga', data(05, 02, 2019)), R).
 
-% Query 4 ----------------------------------------------------------
+% Funcionalidade 4 ----------------------------------------------------------
 
 %   O contrato celebrado entre a adjudicante Municipio de Vila Nova de Famalicao e a 
 %   adjudicataria Vodafone, tem um valor proximo dos 5000, em Consulta Previa.
@@ -340,7 +346,7 @@ proximo(X, Linf, Lsup) :-
 
 % demo(contrato(304, 4, 2, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de telecomonicacoes', 50000, 365, 'Vila Nova de Famalicao', data(13, 04, 2018)), R).
 
-% Query 5 ----------------------------------------------------------
+% Funcionalidade 5 ----------------------------------------------------------
 
 %   O papel do contrato estabelecido entre a empresa 'Diversey Portugal-Sistemas de Higiene e Limpeza Unipessoal, Lda' 
 %   e a entidade adjudicante 'Faculdade de Engenharia da Universidade do Porto' perdeu-se,
@@ -360,7 +366,7 @@ nulo(tp5).
 % demo(contrato(305, 8, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 1000, 500, 'Porto', data(30, 01, 1960)),R).
 % evolucao(contrato(305, 8, 5, 'Aquisicao de servicos', 'Consulta Previa', 'Servicos de Limpeza', 1000, 500, 'Porto', data(30, 01, 1960))).
 
-% Query 6 ----------------------------------------------------------
+% Funcionalidade 6 ----------------------------------------------------------
 
 % Desconhece-se a morada da entidade adjudicante 'XCorp'
 adjudicante(306, 'XCorp', 3000, m6).
@@ -369,7 +375,7 @@ excecao(adjudicante(Id, N, Nif, Morada)) :-
 
 % demo(adjudicante(306, 'XCorp', 3000, 'Famalicao'), R).
 
-% Query 7 ----------------------------------------------------------
+% Funcionalidade 7 ----------------------------------------------------------
 
 % Sabe-se que a entidade adjudicataria 'NOS' tem como Morada Portugal, Lisboa. Contudo desconhece-se o NIF desta
 % sabendo apenas que não é 10101
@@ -380,7 +386,7 @@ excecao(adjudicataria(Id, Nome, NIF, Morada)) :-
 
 % demo(adjudicataria(307, 'NOS', 101, 'Portugal, Lisboa'), R).
 
-% Query 8 ----------------------------------------------------------
+% Funcionalidade 8 ----------------------------------------------------------
 
 % O contrato entre a entidade adjudicante 'AAUM-Associacao Academica da Universidade do Minho' e a entidade adjudicataria 'Transportes Urbanos 
 % de Braga serviu para propocionar viagens aos estudantes dentro da cidade de Braga. Sabe-se que o contrato foi celebrado
@@ -402,33 +408,43 @@ excecao(contrato(IdC, IdA, IdAda, TC, TP, Desc, V, Pr, Loc, D)) :-
 
 %-------------------------------------------------------------------
 
+% Extensão do predicado que permite a evolução do conhecimento
 evolucao( Termo ) :-
     solucoes( Invariante,+Termo::Invariante,Lista ),
     insercao( Termo ),
     teste( Lista ).
 
+% Ocorre a inserção do Termo através do "assert". Contudo, se o predicado seguinte falhar, 
+% a segunda cláusula é chamada retirando o Termo
 insercao( Termo ) :-
     assert( Termo ).
 insercao( Termo ) :-
     retract( Termo ),!,fail.
 
+% Testa cada elemento da lista, verificando se o elemento falha em algum invariante
 teste( [] ).
 teste( [R|LR] ) :-
     R,
     teste( LR ).
 
 %-------------------------------------------------------------------
-% Extensão do predicado que permite a involucao do conhecimento
 
+% Extensão do predicado que permite a involução do conhecimento.
+% Através da chamada do Termo, verificamos se este existe no conhecimento do sistema.
+% Caso não exista, falha o involução e não o acrescenta ao conhecimento.
 involucao( Termo ) :-
+    Termo,
     solucoes( Invariante,-Termo::Invariante,Lista ),
     remocao( Termo ),
     teste( Lista ).
 
+% Predicado simétrico ao insercao. Faz o retract do Termo e, caso falhe o predicado seguinte no involucao,
+% chama o assert para voltar a inserir este.
 remocao( Termo ) :-
     retract( Termo ).
 remocao( Termo ) :-
     assert( Termo ),!,fail.
+
 
 %-------------------------------------------------------------------
 % Extensao do meta-predicado demo: Questao,Resposta -> {V,F}
