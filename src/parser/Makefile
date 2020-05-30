@@ -4,9 +4,9 @@
 # Configuration section (change this variables to load different datasets)
 
 # Dataset sources
-IN_DATASET_FILE = ../../datasets/raw/encoded/paragem_autocarros_oeiras_encoded.csv
+IN_DATASETS_FOLDER = ../../datasets/raw/encoded/
 # Dataset processed into a prolog file
-OUT_DATASET_FILE = ../../datasets/processed/paragens.pl
+OUT_PROLOG_FILE = ../../datasets/processed/paragensLigacoes.pl
 
 # ------------------------------------------------------------------------
 
@@ -15,8 +15,8 @@ OUT_PRODUCTION = out/production/parser
 SRC = src
 
 all: clean compile
-	@echo "\nInput dataset : "$(IN_DATASET_FILE)
-	@echo "Ouput prolog  : "$(OUT_DATASET_FILE)
+	@echo "\nInput datasets = "$(IN_DATASETS_FOLDER)
+	@echo "Ouput prolog   = "$(OUT_PROLOG_FILE)
 	@echo "\nProgram compiled, use rule 'make run' to run the parser.\n"
 
 compile:
@@ -25,7 +25,7 @@ compile:
 
 run:
 	@clear
-	@java -classpath $(OUT_PRODUCTION) parser.Main $(IN_DATASET_FILE) $(OUT_DATASET_FILE)
+	@java -classpath $(OUT_PRODUCTION) parser.Main $(IN_DATASETS_FOLDER) $(OUT_PROLOG_FILE)
 
 clean:
 	@clear
