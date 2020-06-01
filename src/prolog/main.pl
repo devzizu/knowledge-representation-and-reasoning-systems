@@ -6,26 +6,21 @@
 :- set_prolog_flag( single_var_warnings,off ).
 :- set_prolog_flag( unknown,fail ).
 
+% Dados para a base de conhecimento
 :- include('include/paragensLigacoes').
+% Regras auxiliares
 :- include('include/auxiliar').
+% Algumas heuristicas aplicadas nos algoritmos de procura
+:- include('include/heuristicas').
+
+
+% ---------------------------------Algotitmos de procura---------------------------------
+
 
 %----------------------------------------------------------------------------------
-% Calcular um trajeto entre dois pontos
-
-% Exemplos:
-
-% resolve_depthFirst(183, 594, C).
-% resolve_breathFirst(183, 594, C), inverso(C, R).
-% resolve_astar(183, 499, C), writeList(C).
-
-%----------------------------------------------------------------------------------------
-
-                        /* Algotitmos de procura */
-
-%----------------------------------------------------------------------------------------
 % Depth-first Search
 
-% resolve_depthFirst(183, 594, C).
+% Q1: resolve_depthFirst(183, 594, C), displayList(C).
 
 resolve_depthFirst(Inicial, Final, [Inicial|Caminho]) :-
 	depthFirstSearch(Inicial, Final, Caminho).
@@ -43,10 +38,11 @@ adjacente(Nodo, ProxNodo) :-
 %----------------------------------------------------------------------------------
 % Breath-first Search
 
-% resolve_breathFirst(183, 594, C), inverso(C, R).
+% Q1: resolve_breathFirst(183, 594, C), displayList(C).
 
-resolve_breathFirst(Inicial, Final, Solucao) :-
-        breathFirstSearch([[Inicial]], Final, Solucao).
+resolve_breathFirst(Inicial, Final, CaminhoFinal) :-
+        breathFirstSearch([[Inicial]], Final, Solucao),
+        inverteLista(Solucao, CaminhoFinal, []).
 
 breathFirstSearch([[Nodo|Caminho]|_], Final, [Nodo|Caminho]) :-
         Nodo == Final.
@@ -61,12 +57,12 @@ breathFirstSearch([[N|Caminho]|CaminhoList], Final, Solucao) :-
 %----------------------------------------------------------------------------------
 % A* Search
 
-% resolve_astar(183, 499, C), writeList(C).
+% Q1: resolve_astar(183, 595, Caminho/CostTime), displayList(Caminho).
 
-resolve_astar(Inicial, Final, Caminho/Custo) :-
+resolve_astar(Inicial, Final, CaminhoFinal/Custo) :-
 	distanciaEuclidiana(Inicial, Final, Estima),
-	astarSearch([[Inicial]/0/Estima], Final, InvCaminho/Custo/_),
-        inverso(InvCaminho, Caminho).
+	astarSearch([[Inicial]/0/Estima], Final, CaminhoReversed/Custo/_),
+        inverteLista(CaminhoReversed, CaminhoFinal, []).
 
 astarSearch(Caminhos, Final, Caminho) :-
 	bestPath(Caminhos, Caminho),
@@ -101,3 +97,8 @@ adjacenteAStar([Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/NovoCusto/
                 distanciaEuclidiana(
                         ProxNodo, Final, Est
                 ).
+
+seleciona(E, [E|Xs], Xs).
+seleciona(E, [X|Xs], [X|Ys]) :- seleciona(E, Xs, Ys).
+
+%----------------------------------------------------------------------------------
