@@ -48,21 +48,21 @@ adjacenteBF(Paragens, Nodo, NodoAdj) :-
 %----------------------------------------------------------------------------------
 % A* Search
 
-resolve_astar(Inicial, Final, CaminhoFinal/Custo) :-
+resolve_astar(Paragens, Inicial, Final, CaminhoFinal/Custo) :-
 	distanciaEuclidiana(Inicial, Final, Estima),
-	astarSearch([[Inicial]/0/Estima], Final, CaminhoReversed/Custo/_),
+	astarSearch(Paragens, [[Inicial]/0/Estima], Final, CaminhoReversed/Custo/_),
         inverteLista(CaminhoReversed, CaminhoFinal, []).
 
-astarSearch(Caminhos, Final, Caminho) :-
+astarSearch(Paragens, Caminhos, Final, Caminho) :-
 	bestPath(Caminhos, Caminho),
 	Caminho = [Nodo|_]/_/_, Nodo == Final.
 
-astarSearch(Caminhos, Final, SolucaoCaminho) :-
+astarSearch(Paragens, Caminhos, Final, SolucaoCaminho) :-
 	bestPath(Caminhos, MelhorCaminho),
 	seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
-	expand_astar(MelhorCaminho, Final, ExpCaminhos),
+	expand_astar(Paragens, MelhorCaminho, Final, ExpCaminhos),
 	append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
-        astarSearch(NovoCaminhos, Final, SolucaoCaminho).		
+        astarSearch(Paragens, NovoCaminhos, Final, SolucaoCaminho).		
 
 bestPath([Caminho], Caminho) :- !.
 
@@ -73,11 +73,11 @@ bestPath([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
 bestPath([_|Caminhos], MelhorCaminho) :- 
 	bestPath(Caminhos, MelhorCaminho).
 
-expand_astar(Caminho, Final, ExpCaminhos) :-
-	findall(NovoCaminho, adjacenteAStar(Caminho, Final, NovoCaminho), ExpCaminhos).
+expand_astar(Paragens, Caminho, Final, ExpCaminhos) :-
+	findall(NovoCaminho, adjacenteAStar(Paragens, Caminho, Final, NovoCaminho), ExpCaminhos).
 
-adjacenteAStar([Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/NovoCusto/Est) :-
-	        ligacao(Nodo, ProxNodo, _),
+adjacenteAStar(Paragens, [Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/NovoCusto/Est) :-
+	        verificarLigacaoAStar(Paragens, Nodo, ProxNodo),
                 \+ membro(ProxNodo, Caminho),
 	        distanciaEuclidiana(
                         Nodo, ProxNodo, PassoCusto
@@ -86,6 +86,11 @@ adjacenteAStar([Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/NovoCusto/
                 distanciaEuclidiana(
                         ProxNodo, Final, Est
                 ).
+
+verificarLigacaoAStar(Paragens, Nodo, ProxNodo) :- 
+	ligacao(Nodo, ProxNodo, _),
+        existeNodo(Nodo, Paragens),
+        existeNodo(ProxNodo, Paragens).
 
 seleciona(E, [E|Xs], Xs).
 seleciona(E, [X|Xs], [X|Ys]) :- seleciona(E, Xs, Ys).

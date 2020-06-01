@@ -21,9 +21,9 @@
 
 calcula_trajeto(Nodo_A, Nodo_B) :-
         findall(paragem(A,B,C,D,E,F,G,H,I,J), paragem(A,B,C,D,E,F,G,H,I,J), Paragens),
-        resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), displayList(Caminho).
+        %resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), displayList(Caminho).
         %resolve_breathFirst(Paragens, Nodo_A, Nodo_B, Caminho), displayList(Caminho).
-        %resolve_astar(Nodo_A, Nodo_B, Caminho/CostTime), displayList(Caminho), displayCost(CostTime).
+        resolve_astar(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), displayList(Caminho), displayCost(CostTime).
 
 %       Ex_1: calcula_trajeto(183,594). 
 %       Ex_2: calcula_trajeto(183,595).
