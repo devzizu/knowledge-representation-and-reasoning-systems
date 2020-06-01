@@ -13,6 +13,6 @@ distanciaEuclidiana(N1, N2, Distance) :-
         paragem(N2,Lat2,Long2,_,_,_,_,_,_,_),
         X is (Lat2-Lat1), 
         Y is (Long2-Long1),
-        Distance is sqrt(X^2 + Y^2).
+        Distance is sqrt(X^2 + Y^2)/1000.
 
 %---------------------------------------------------------------------------------------------
