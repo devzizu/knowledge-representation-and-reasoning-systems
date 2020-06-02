@@ -19,14 +19,16 @@
 %------------------------------------------------------------------------------------------------------------------
 % 1) Calcular o trajeto entre dois pontos:
 
-calcula_trajeto(Nodo_A, Nodo_B) :-
+calcula_trajeto(Nodo_A, Nodo_B, Caminho/CostTime) :-
         findall(paragem(A,B,C,D,E,F,G,H,I,J), paragem(A,B,C,D,E,F,G,H,I,J), Paragens),
-        resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), format('~w', ['\nCaminho:\n']), displayList(Caminho).
-        %resolve_breathFirst(Paragens, Nodo_A, Nodo_B, Caminho), format('~w', ['\nCaminho:\n']), displayList(Caminho).
-        %resolve_astar(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), format('~w', ['\nCaminho:\n']), displayList(Caminho), displayCost(CostTime).
+        %resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = '>', format('~w', ['\nCaminho:\n']), displayList(Caminho).
+        %resolve_breathFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = '>', format('~w', ['\nCaminho:\n']), displayList(Caminho).
+        resolve_astar(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), format('~w', ['\nCaminho:\n']), displayList(Caminho), displayCost(CostTime).
 
-%       Ex_1: calcula_trajeto(183,594). 
-%       Ex_2: calcula_trajeto(183,595).
+%       Ex_1: calcula_trajeto(183,791, C). 
+%       Ex_2: calcula_trajeto(183,595, C).
+%       Ex_3: findall(C, calcula_trajeto(183,791, C), AllResults).
+%       Ex_4: findall(C, calcula_trajeto(375,791, C), AllResults).
 
 %------------------------------------------------------------------------------------------------------------------
 % 2) Selecionar apenas algumas das operadoras de transporte para um determinado percurso:
@@ -94,19 +96,22 @@ calcular_paragens(Caminho, Paragens) :-
         calcular_paragens_aux(Caminho, [], Paragens).
 
 calcular_paragens_aux([], Acc, Result) :- appendToList(Acc, [], Result).
-calcular_paragens_aux([Nodo|RestoCaminho], Acc, Result) :-
+calcular_paragens_aux([(Nodo,Carr)|RestoCaminho], Acc, Result) :-
         membro(Nodo, Caminho),
         findall(paragem(Nodo,B,C,D,E,F,G,H,I,J), paragem(Nodo,B,C,D,E,F,G,H,I,J), Paragem),
         calcular_ligacoes(Nodo, [], ListaLigacoes),
-        lengthList(ListaLigacoes, Tamanho),
+        sort(ListaLigacoes, R2),
+        lengthList(R2, Tamanho),
         appendToList([Paragem/Tamanho], Acc, R1),
         calcular_paragens_aux(RestoCaminho, R1, Result).
 
 calcular_ligacoes(Nodo, Acc, Result) :-
-        findall(ligacao(Nodo, F1, C1), ligacao(Nodo, F1, C1), Ligacao1),
-        findall(ligacao(F2, Nodo, C2), ligacao(F2, Nodo, C2), Ligacao2),
-        appendToList(Ligacao1, Acc, R1),
-        appendToList(Ligacao2, R1, Result).
+        findall(C1, ligacao(Nodo, F1, C1), L1),
+        findall(C2, ligacao(F2, Nodo, C2), L2),
+        appendToList(L1, Acc, R1),
+        appendToList(L2, R1, R2),
+        flatten(R2,X),
+        sort(X, Result).
 
 mais_carreiras_paragens([], Max, P, Max, Pres) :- Pres = P, !.
 mais_carreiras_paragens([[P]/NR_CARR|RestoDasParagens], Max, Paragem, Res, Pres) :-
@@ -124,3 +129,52 @@ mais_carreiras_paragens([[P]/NR_CARR|RestoDasParagens], Max, Paragem, Res, Pres)
 %------------------------------------------------------------------------------------------------------------------
 % 5) Escolher o menor percurso (usando critério menor número de paragens).
 
+menor_percurso(Nodo_A, Nodo_B, Caminhos) :-
+        findall(C, calcula_trajeto(Nodo_A, Nodo_B, C), Caminhos),
+        menos_paragens(Caminhos, 9999, L, R1, R2),
+        displayGeneral('\nCaminho com menor numero de paragens:\n', R2),
+        displayGeneral('Numero de paragens:\n', R1).
+
+menos_paragens([], Min, P, Min, Pres) :- Pres = P, !.
+menos_paragens([C1/X|Caminhos], Min, Paragem, Res, Pres) :-
+        (
+                lengthList(C1, NR_PAR),
+                Min > NR_PAR ->
+                        A1 is NR_PAR,
+                        P1 = C1,
+                        menos_paragens(Caminhos, A1, P1, Res, Pres)
+                ;
+                        menos_paragens(Caminhos, Min, Paragem, Res, Pres)
+        ).
+
+%       Ex_1: menor_percurso(183,595,R).
+
+%------------------------------------------------------------------------------------------------------------------
+% 6) Escolher o percurso mais rápido (usando critério da distância).
+
+mais_rapido(Nodo_A, Nodo_B, Caminho/CostTime) :-
+        findall(paragem(A,B,C,D,E,F,G,H,I,J), paragem(A,B,C,D,E,F,G,H,I,J), Paragens),
+        resolve_astar(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), format('~w', ['\nCaminho:\n']), displayList(Caminho), displayCost(CostTime).
+
+%------------------------------------------------------------------------------------------------------------------
+% 7) Escolher o percurso que passe apenas por abrigos com publicidade.
+
+com_publicidade(Nodo_A, Nodo_B, Caminhos) :-
+        findall(paragem(A,B,C,D,E,'Yes',G,H,I,J), paragem(A,B,C,D,E,'Yes',G,H,I,J), Paragens),
+        resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = '>', format('~w', ['\nCaminho:\n']), displayList(Caminho).
+
+%------------------------------------------------------------------------------------------------------------------
+% 8) Escolher o percurso que passe apenas por paragens abrigadas.
+
+com_publicidade(Nodo_A, Nodo_B, Caminhos) :-
+        findall(paragem(A,B,C,D,E,F,G,H,I,J), paragem(A,B,C,D,E,F,G,H,I,J), Paragens),
+        filtrar_com_abrigo(Paragens, Filtrado),
+        resolve_depthFirst(Filtrado, Nodo_A, Nodo_B, Caminho), CostTime = '>', format('~w', ['\nCaminho:\n']), displayList(Caminho).
+
+filtrar_com_abrigo([],Acc,Res) :- appendToList(Acc, [], Res).
+filtrar_com_abrigo([paragem(A,B,C,D,'Sem Abrigo',F,G,H,I,J)|RestoDasParagens], Acc, Res) :-
+        filtrar_com_abrigo(RestoDasParagens, Acc, Res). 
+filtrar_com_abrigo([P|RestoDasParagens], Acc, Res) :-
+        appendToList([P], Acc, R1),
+        displayGeneral('ab',P), 
+        filtrar_com_abrigo(RestoDasParagens, R1, Res).

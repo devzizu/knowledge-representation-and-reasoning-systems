@@ -52,7 +52,7 @@ public class Main {
             
             CSVReader.csvToProlog(inputFiles, dataSetOutputFile);
             
-            System.out.println("\n> Finished. Output file location: " + args[1]);
+            System.out.println("> Finished. Output file location: " + args[1]);
 
         } catch (Exception e) {
             e.printStackTrace();

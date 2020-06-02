@@ -26,7 +26,6 @@ public class CSVReader {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
         
         boolean isStart = true;
-        int r = 0;
 
         int lastGID = -1, currGID = -1, counter = 1;
         for (File dataSet: inputCSVFiles) {
@@ -80,8 +79,6 @@ public class CSVReader {
                     bw.write(paragem.toPrologFact()); 
                     bw.newLine();
                     
-                } else {
-                    r++;
                 }
 
                 paragensGids.add(paragem.getGid());
@@ -106,9 +103,7 @@ public class CSVReader {
             bw.newLine();
         }
 
-        System.out.println("Repeated GIDs = " + r + ";");
         bw.flush();
         bw.close();
-
     }
 }

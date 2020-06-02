@@ -63,3 +63,18 @@ appendToList([H|T],L,[H|Z]):- appendToList(T,L,Z).
 mergeList([],L,L ).
 mergeList([H|T],L,[H|M]):-
   mergeList(T,L,M).
+
+flatten(List, FlatList) :-
+    flatten(List, [], FlatList0),
+    !,
+    FlatList = FlatList0.
+
+flatten(Var, Tl, [Var|Tl]) :-
+    var(Var),
+    !.
+flatten([], Tl, Tl) :- !.
+flatten([Hd|Tl], Tail, List) :-
+    !,
+    flatten(Hd, FlatHeadTail, List),
+    flatten(Tl, Tail, FlatHeadTail).
+flatten(NonList, Tl, [NonList|Tl]).

@@ -1,21 +1,22 @@
 
-% Algotitmos de procura
+%----------------------------------------------------------------------------------
+% Algotitmos de procura para 1 caminho
+%----------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------
 % Depth-first Search
 
-resolve_depthFirst(Paragens, Inicial, Final, [Inicial|Caminho]) :-
+resolve_depthFirst(Paragens, Inicial, Final, [(Inicial,'Start')|Caminho]) :-
 	depthFirstSearch(Paragens, Inicial, Final, Caminho).
 
-depthFirstSearch(Paragens, Nodo, Final, []) :-
-	Nodo == Final.
+depthFirstSearch(Paragens, Final, Final, []) :- !.
 
-depthFirstSearch(Paragens, Nodo, Final, [ProxNodo|Caminho]) :-
-        adjacenteDF(Paragens, Nodo, ProxNodo),
+depthFirstSearch(Paragens, Nodo, Final, [(ProxNodo,Carreira)|Caminho]) :-
+        adjacenteDF(Paragens, Nodo, ProxNodo, Carreira),
 	depthFirstSearch(Paragens, ProxNodo, Final, Caminho).	
 
-adjacenteDF(Paragens, Nodo, ProxNodo) :- 
-	ligacao(Nodo, ProxNodo, _),
+adjacenteDF(Paragens, Nodo, ProxNodo, Carreira) :- 
+	ligacao(Nodo, ProxNodo, Carreira),
         existeNodo(Nodo, Paragens),
         existeNodo(ProxNodo, Paragens).
 
@@ -26,36 +27,36 @@ existeNodo(Nodo, [P|Tail]) :- existeNodo(Nodo, Tail).
 % Breath-first Search
 
 resolve_breathFirst(Paragens, Inicial, Final, CaminhoFinal) :-
-        breathFirstSearch(Paragens, [[Inicial]], Final, Solucao),
+        breathFirstSearch(Paragens, [[(Inicial,'Start')]], Final, Solucao),
         inverteLista(Solucao, CaminhoFinal, []).
 
-breathFirstSearch(Paragens, [[Nodo|Caminho]|_], Final, [Nodo|Caminho]) :-
+breathFirstSearch(Paragens, [[(Nodo,C)|Caminho]|_], Final, [(Nodo,C)|Caminho]) :-
         Nodo == Final.
 
-breathFirstSearch(Paragens, [[N|Caminho]|CaminhoList], Final, Solucao) :-
-        bagof([M, N|Caminho],
-        %setof([M, N|Caminho],
-        (adjacenteBF(Paragens, N, M), \+ membro(M, [N|Caminho])), NovosCaminhos),
+breathFirstSearch(Paragens, [[(N,C)|Caminho]|CaminhoList], Final, Solucao) :-
+        bagof([(M, Carreira), (N,C)|Caminho],
+        %setof([(M, Carreira), (N,C)|Caminho],
+        (adjacenteBF(Paragens, N, (M, Carreira)), \+ membro((M, Carreira), [(N,C)|Caminho])), NovosCaminhos),
         append(CaminhoList, NovosCaminhos, Res), !,
         breathFirstSearch(Paragens, Res, Final, Solucao);
         breathFirstSearch(Paragens, CaminhoList, Final, Solucao).
 
-adjacenteBF(Paragens, Nodo, NodoAdj) :- 
-	ligacao(Nodo, NodoAdj, _),
+adjacenteBF(Paragens, Nodo, (NodoAdj,Carreira)) :- 
+	ligacao(Nodo, NodoAdj, Carreira),
         existeNodo(Nodo, Paragens),
         existeNodo(NodoAdj, Paragens).
-
+        
 %----------------------------------------------------------------------------------
 % A* Search
 
 resolve_astar(Paragens, Inicial, Final, CaminhoFinal/Custo) :-
 	distanciaEuclidiana(Inicial, Final, Estima),
-	astarSearch(Paragens, [[Inicial]/0/Estima], Final, CaminhoReversed/Custo/_),
+	astarSearch(Paragens, [[(Inicial,'Start')]/0/Estima], Final, CaminhoReversed/Custo/_),
         inverteLista(CaminhoReversed, CaminhoFinal, []).
 
 astarSearch(Paragens, Caminhos, Final, Caminho) :-
 	bestPath(Caminhos, Caminho),
-	Caminho = [Nodo|_]/_/_, Nodo == Final.
+	Caminho = [(Nodo,C)|_]/_/_, Nodo == Final.
 
 astarSearch(Paragens, Caminhos, Final, SolucaoCaminho) :-
 	bestPath(Caminhos, MelhorCaminho),
@@ -76,9 +77,9 @@ bestPath([_|Caminhos], MelhorCaminho) :-
 expand_astar(Paragens, Caminho, Final, ExpCaminhos) :-
 	findall(NovoCaminho, adjacenteAStar(Paragens, Caminho, Final, NovoCaminho), ExpCaminhos).
 
-adjacenteAStar(Paragens, [Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/NovoCusto/Est) :-
-	        verificarLigacaoAStar(Paragens, Nodo, ProxNodo),
-                \+ membro(ProxNodo, Caminho),
+adjacenteAStar(Paragens, [(Nodo,C1)|Caminho]/Custo/_, Final, [(ProxNodo,C2),(Nodo,C1)|Caminho]/NovoCusto/Est) :-
+	        verificarLigacaoAStar(Paragens, Nodo, (ProxNodo,C2)),
+                \+ membro((ProxNodo,C2), Caminho),
 	        distanciaEuclidiana(
                         Nodo, ProxNodo, PassoCusto
                 ),
@@ -87,12 +88,10 @@ adjacenteAStar(Paragens, [Nodo|Caminho]/Custo/_, Final, [ProxNodo,Nodo|Caminho]/
                         ProxNodo, Final, Est
                 ).
 
-verificarLigacaoAStar(Paragens, Nodo, ProxNodo) :- 
-	ligacao(Nodo, ProxNodo, _),
+verificarLigacaoAStar(Paragens, Nodo, (ProxNodo,C2)) :- 
+	ligacao(Nodo, ProxNodo, C2),
         existeNodo(Nodo, Paragens),
         existeNodo(ProxNodo, Paragens).
 
 seleciona(E, [E|Xs], Xs).
 seleciona(E, [X|Xs], [X|Ys]) :- seleciona(E, Xs, Ys).
-
-%----------------------------------------------------------------------------------
