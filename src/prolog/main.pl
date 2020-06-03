@@ -34,8 +34,8 @@ de um caminho no sistema de paragens.
 
 calcula_trajeto(Nodo_A, Nodo_B, Caminho/CostTime) :-
         findall(paragem(A,B,C,D,E,F,G,H,I,J), paragem(A,B,C,D,E,F,G,H,I,J), Paragens),
-        resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = 'n/a'.%, format('~w', ['\nCaminho:\n']), displayList(Caminho).
-        %resolve_breathFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = 'n/a'.%, format('~w', ['\nCaminho:\n']), displayList(Caminho).
+        %resolve_depthFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = 'n/a'.%, format('~w', ['\nCaminho:\n']), displayList(Caminho).
+        resolve_breathFirst(Paragens, Nodo_A, Nodo_B, Caminho), CostTime = 'n/a'.%, format('~w', ['\nCaminho:\n']), displayList(Caminho).
         %resolve_astar(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), format('~w', ['\nCaminho:\n']), displayList(Caminho), displayCost(CostTime).
         %resolve_greedy(Paragens, Nodo_A, Nodo_B, Caminho/CostTime), format('~w', ['\nCaminho:\n']), displayList(Caminho), displayCost(CostTime).
 

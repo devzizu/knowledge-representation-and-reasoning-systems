@@ -1,15 +1,17 @@
 # SRCR
 
-This repository serves SRCR individual project about...
+This repository serves SRCR project about path finding algorithms and
+data normalization in order to query this system.
 
 ## File organisation
 
-DataSets:
+datasets:
 
 ```bash
-Stores all the usefull raw datasets
+Stores all the usefull raw/processed 
+datasets.
 ```
-Documents:
+documents:
 
 ```bash
 Stores the assignment and 
