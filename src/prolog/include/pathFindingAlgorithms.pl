@@ -1,6 +1,6 @@
 
 %----------------------------------------------------------------------------------
-% Algotitmos de procura para 1 caminho
+% Algotitmos de procura informada
 %----------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------
@@ -45,7 +45,11 @@ adjacenteBF(Paragens, Nodo, (NodoAdj,Carreira)) :-
 	ligacao(Nodo, NodoAdj, Carreira),
         existeNodo(Nodo, Paragens),
         existeNodo(NodoAdj, Paragens).
-        
+
+%----------------------------------------------------------------------------------
+% Algotitmos de procura não-informada
+%----------------------------------------------------------------------------------
+    
 %----------------------------------------------------------------------------------
 % A* Search
 
@@ -55,24 +59,24 @@ resolve_astar(Paragens, Inicial, Final, CaminhoFinal/Custo) :-
         inverteLista(CaminhoReversed, CaminhoFinal, []).
 
 astarSearch(Paragens, Caminhos, Final, Caminho) :-
-	bestPath(Caminhos, Caminho),
+	bestPathAsearch(Caminhos, Caminho),
 	Caminho = [(Nodo,C)|_]/_/_, Nodo == Final.
 
 astarSearch(Paragens, Caminhos, Final, SolucaoCaminho) :-
-	bestPath(Caminhos, MelhorCaminho),
+	bestPathAsearch(Caminhos, MelhorCaminho),
 	seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
 	expand_astar(Paragens, MelhorCaminho, Final, ExpCaminhos),
 	append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
         astarSearch(Paragens, NovoCaminhos, Final, SolucaoCaminho).		
 
-bestPath([Caminho], Caminho) :- !.
+bestPathAsearch([Caminho], Caminho) :- !.
 
-bestPath([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
+bestPathAsearch([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho) :-
 	Custo1 + Est1 =< Custo2 + Est2, !,
-	bestPath([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
+	bestPathAsearch([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
 	
-bestPath([_|Caminhos], MelhorCaminho) :- 
-	bestPath(Caminhos, MelhorCaminho).
+bestPathAsearch([_|Caminhos], MelhorCaminho) :- 
+	bestPathAsearch(Caminhos, MelhorCaminho).
 
 expand_astar(Paragens, Caminho, Final, ExpCaminhos) :-
 	findall(NovoCaminho, adjacenteAStar(Paragens, Caminho, Final, NovoCaminho), ExpCaminhos).
@@ -95,3 +99,34 @@ verificarLigacaoAStar(Paragens, Nodo, (ProxNodo,C2)) :-
 
 seleciona(E, [E|Xs], Xs).
 seleciona(E, [X|Xs], [X|Ys]) :- seleciona(E, Xs, Ys).
+
+%----------------------------------------------------------------------------------
+% Greedy Search
+
+resolve_greedy(Paragens, Inicial, Final, Caminho/Custo):- 
+        distanciaEuclidiana(Inicial, Final, Estima),
+        greedySearch(Paragens, [[(Inicial, 'Start')]/0/Estima], Final, InvCaminho/Custo/_),
+	inverteLista(InvCaminho, Caminho, []).
+
+greedySearch(Paragens, Caminhos, Final, Caminho):- 
+        bestPathGreedy(Caminhos, Caminho),
+        Caminho = [(Nodo,C)|_]/_/_, Nodo == Final.
+
+greedySearch(Paragens, Caminhos, Final, SolucaoCaminho):-
+        bestPathGreedy(Caminhos, MelhorCaminho),
+	seleciona(MelhorCaminho, Caminhos, OutrosCaminhos),
+	expand_greedy(Paragens, MelhorCaminho, Final, ExpCaminhos),
+	append(OutrosCaminhos, ExpCaminhos, NovoCaminhos),
+        greedySearch(Paragens, NovoCaminhos, Final, SolucaoCaminho).
+
+bestPathGreedy([Caminho],Caminho):- !.
+
+bestPathGreedy([Caminho1/Custo1/Est1,_/Custo2/Est2|Caminhos], MelhorCaminho):- 
+        Est1 =< Est2, !, 
+        bestPathGreedy([Caminho1/Custo1/Est1|Caminhos], MelhorCaminho).
+																			
+bestPathGreedy([_|Caminhos],MelhorCaminho):- 
+        bestPathGreedy(Caminhos, MelhorCaminho).
+
+expand_greedy(Paragens, Caminho, Final, ExpCaminhos):- 
+        findall(NovoCaminho, adjacenteAStar(Paragens, Caminho, Final, NovoCaminho), ExpCaminhos).

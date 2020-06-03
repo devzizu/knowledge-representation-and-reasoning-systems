@@ -13,7 +13,7 @@ displayList([A|B]) :-
 
 displayListNormal([]).
 displayListNormal([A|B]) :-
-  format('~w',A),
+  format('~w ',A),
   displayListNormal(B).
 
 displayListSlash([]).
@@ -34,6 +34,11 @@ displayGeneral(Text, R) :- format('\n~w = ~w',[Text, R]).
 membro(X, [X|_]).
 membro(X, [_|Xs]):-
         membro(X,Xs).
+
+membros([], _).
+membros([X|Xs], Members) :-
+        membro(X, Members),
+        membros(Xs, Members).
 
 %----------------------------------------------------------------------------------------
 % Calcula o inverso de uma lista (not working properly)
@@ -64,6 +69,9 @@ mergeList([],L,L ).
 mergeList([H|T],L,[H|M]):-
   mergeList(T,L,M).
 
+%----------------------------------------------------------------------------------------
+% Merge de varias listas numa
+
 flatten(List, FlatList) :-
     flatten(List, [], FlatList0),
     !,
@@ -78,3 +86,31 @@ flatten([Hd|Tl], Tail, List) :-
     flatten(Hd, FlatHeadTail, List),
     flatten(Tl, Tail, FlatHeadTail).
 flatten(NonList, Tl, [NonList|Tl]).
+
+%----------------------------------------------------------------------------------------
+% Verificar se é sublista
+
+isSublist( [], _ ).
+isSublist( [X|XS], [X|XSS] ) :- isSublist( XS, XSS ).
+isSublist( [X|XS], [_|XSS] ) :- isSublist( [X|XS], XSS ).
+
+%----------------------------------------------------------------------------------------
+% Remover o ultimo elemento
+
+remove_last([X|Xs], Ys) :-
+   remove_last_aux(Xs, Ys, X).
+
+remove_last_aux([], [], _).
+remove_last_aux([X1|Xs], [X0|Ys], X0) :-  
+   remove_last_aux(Xs, Ys, X1).
+
+%----------------------------------------------------------------------------------------
+% Remover o primeiro elemento
+
+remove_head([_|Tail], Tail).
+
+%----------------------------------------------------------------------------------------
+% obter Primeiro elemento de uma lista
+
+first_list([H], H).
+first_list([H|_], H).
