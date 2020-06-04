@@ -44,8 +44,8 @@ calcula_trajeto(Nodo_A, Nodo_B, Caminho/CostTime) :-
 %       Ex_1: calcula_trajeto(183,791, C).
 %       Ex_2: calcula_trajeto(183,595, C).
 %       Ex_3: calcula_trajeto(354,79, C).
-%       Ex_4: findall(C, calcula_trajeto(183,791, C), AllResults).
-%       Ex_5: findall(C, calcula_trajeto(375,791, C), AllResults).
+%       Ex_4: findall(C, calcula_trajeto(183,595, C), AllResults).
+%       Ex_5: findall(C, calcula_trajeto(183,185, C), AllResults).
 
 %------------------------------------------------------------------------------------------------------------------
 
@@ -114,7 +114,8 @@ excluemOperadoras([paragem(A,B,C,D,E,F,Oper,H,I,J)|RestoDasParagens], ListaOpera
       
 %       Ex_1: calcula_trajeto_excluir_operadoras(183, 595, ['Vimeca']).
 %       Ex_2: calcula_trajeto_excluir_operadoras(183, 595, ['Carris']).
-%       Ex_3: calcula_trajeto_excluir_operadoras(183, 182, ['Vimeca', 'SCoTTURB']).
+%       Ex_3: calcula_trajeto_excluir_operadoras(183, 595, ['Vimeca', 'SCoTTURB']).
+%       Ex_4: calcula_trajeto_excluir_operadoras(183, 182, ['Vimeca', 'SCoTTURB']).
 
 %------------------------------------------------------------------------------------------------------------------
 
