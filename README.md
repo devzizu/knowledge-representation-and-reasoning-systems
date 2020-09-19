@@ -1,6 +1,6 @@
 # Knowledge Representation and Reasoning Systems project (SRCR)
 #### Group Project - Logic programming in Prolog and Imperfect Knowledge
-#
+
 #### Members / Mainteiners 
 
 - João Azevedo    | [A85227]
