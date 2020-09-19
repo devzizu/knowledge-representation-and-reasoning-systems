@@ -5,7 +5,7 @@ This repository serves SRCR project about path finding algorithms and data norma
 
 #### Group Project
 
-[SRCR Group Project](hgithub.com/devzizu/SRCR-Project-2020)
+[SRCR Group Project](https://github.com/devzizu/SRCR-Project-2020)
 
 #### Members / Mainteiners 
 
