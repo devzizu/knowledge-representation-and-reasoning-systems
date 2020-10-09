@@ -14,8 +14,4 @@ This repository serves SRCR project about path finding algorithms and data norma
 |---------------|--------|
 | [João Azevedo](https://github.com/devzizu)   | A85227 |
 
-#### Group Project (link)
-
-[SRCR Group Project](https://github.com/devzizu/SRCR-Project-2020)
-
 >**University of Minho, Software Engineering (3rd year)**.
