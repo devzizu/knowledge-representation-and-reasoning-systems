@@ -1,4 +1,4 @@
-#### Group Project - Logic programming in Prolog and Imperfect Knowledge
+## Group Project - Logic programming in Prolog and Imperfect Knowledge
 
 ### Members / Maintainers
 
